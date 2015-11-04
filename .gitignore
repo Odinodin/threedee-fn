@@ -1,0 +1,31 @@
+# Intellij
+##########
+*.iml
+**/.idea
+
+# Generated
+##########
+js
+prod-out/
+**/out
+**/resources/public/*.cljs
+target/
+classes/
+checkouts/
+*.jar
+*.class
+/.lein-*
+/.nrepl-port
+.repl
+
+
+.lein-repl-history
+figwheel-server.log
+
+# Mac OS
+########
+.DS_Store
+
+# Figwheel
+##########
+figwheel_server.log
