@@ -1,5 +1,5 @@
 (ns threedee.core
-  (:require [cljs.pprint :refer [pprint] ]
+  (:require [cljs.pprint :refer [pprint]]
             [cljsjs.three :as THREE]
             [threedee.vectors :as v]))
 
@@ -7,19 +7,23 @@
 
 (def WIDTH 600)
 (def HEIGHT 600)
-(def attractor-acceleration 0.04)
-(def max-velocity 2)
+(def attractor-acceleration 0.01)
+(def max-velocity 0.2)
 
 (defonce scene (THREE.Scene.))
 (def camera (THREE.PerspectiveCamera. 75 (/ WIDTH HEIGHT) 0.2 1000))
 (defonce renderer (THREE.WebGLRenderer. #js {"antialias" true}))
+(defonce light (do
+                 (let [light (THREE.DirectionalLight. 0x0000ff 1)]
+                   (.set (.-position light) 0.5 -1 0)
+                   (.add scene light))))
 
 (.setPixelRatio renderer js.window.devicePixelRatio)
 (.setSize renderer WIDTH HEIGHT)
 
 (defonce x (.appendChild (.getElementById js/document "main") renderer.domElement))
 
-(defonce model (atom {:attractor {:pos [0 0]}
+(defonce model (atom {:attractor {:id "attractor" :pos [0 0]}
                       :balls     (for [n (range 1 10)]
                                    {:id n :pos [(* n 0.4) 0] :velocity [0 0.3] :acceleration [0 0]})}))
 
@@ -59,13 +63,14 @@
       accelerate-balls
       move-balls))
 
-
-(def geometry (THREE.BoxGeometry. 0.2 0.3 0.1))
-(def material (THREE.MeshBasicMaterial. #js {"color" 0xffffff "wireframe" true}))
+(def geometry (THREE.SphereGeometry. 0.2 0.3 0.1))
+(def material (THREE.MeshPhongMaterial. #js {"color" 0xffffff
+                                             "specular" 0x555555
+                                             "shininess" 30}))
 
 (defn add-items-to-scene [scene model]
-  (doseq [ball (:balls model)]
-    (prn (str  "Adding: " ball))
+  (doseq [ball (conj (:balls model) (:attractor model))]
+    (prn (str "Adding: " ball))
     (let [ball-mesh (THREE.Mesh.
                       geometry
                       material)]
@@ -100,6 +105,6 @@
 
 (defonce initial-setup
          (do
-             (prn "Initial setup")
-             (add-items-to-scene scene @model)
-             (mainloop)))
+           (prn "Initial setup")
+           (add-items-to-scene scene @model)
+           (mainloop)))
