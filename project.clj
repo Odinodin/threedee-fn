@@ -2,10 +2,11 @@
             :description "Threedee fn"
             :dependencies [[org.clojure/clojure "1.7.0"]
                            [org.clojure/clojurescript "1.7.145"]
-
                            [figwheel "0.4.1"]
                            [cljsjs/three "0.0.70-0"]
 
+                           [com.cemerick/piggieback "0.2.1"]
+                           [org.clojure/tools.nrepl "0.2.10"]
                            ]
             :plugins [[lein-cljsbuild "1.1.0"]
                       [lein-figwheel "0.4.1"]]
@@ -31,4 +32,7 @@
                        :server-port      4000               ;; default
                        :css-dirs         ["resources/public/css"] ;; watch and update CSS
 
-                       :nrepl-port 4444})
+                       :nrepl-port 4444
+                        :nrepl-middleware ["cemerick.piggieback/wrap-cljs-repl"]
+
+                       })
