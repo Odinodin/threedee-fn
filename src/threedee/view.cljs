@@ -1,5 +1,7 @@
 (ns threedee.view)
 
+(def THREE js/THREE)
+
 (defn mouse-x->world-x [x canvas-width visible-width]
   (- (/ x (/ canvas-width visible-width))
      (/ visible-width 2)))
@@ -34,8 +36,10 @@
     (.set (.-position c) x y z)
     c))
 
-(defn renderer [width height]
-  (let [r (THREE.WebGLRenderer. #js {"antialias" true})]
-    (.setPixelRatio r js.window.devicePixelRatio)
+(defn renderer [canvas-el width height]
+  (let [r (THREE.WebGLRenderer. #js {"canvas" canvas-el
+                                     "antialias" true
+                                     "alpha" true})]
+    (.setClearColor r 0xffffff 0)
     (.setSize r width height)
     r))

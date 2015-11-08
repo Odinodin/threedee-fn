@@ -6,8 +6,9 @@
 
 (enable-console-print!)
 
-(def WIDTH 600)
-(def HEIGHT 600)
+(def canvas-element (.getElementById js/document "main"))
+(def WIDTH (.-width canvas-element))
+(def HEIGHT (.-height canvas-element))
 (def attractor-acceleration 0.005)
 (def max-velocity 0.11)
 
@@ -15,7 +16,7 @@
 
 (def camera (view/camera WIDTH HEIGHT [0 0 6]))
 
-(defonce renderer (view/renderer WIDTH HEIGHT))
+(defonce renderer (view/renderer canvas-element WIDTH HEIGHT))
 
 (defonce model (atom {:attractor {:id     "attractor"
                                   :pos    [0 0 0]
@@ -110,5 +111,4 @@
            (add-items-to-scene scene @model)
            (view/add-hemi-light! scene)
            (view/add-directional-light! scene [0.5 -1 0])
-           (.appendChild (.getElementById js/document "main") renderer.domElement)
            (mainloop)))
