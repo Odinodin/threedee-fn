@@ -1,6 +1,5 @@
-(ns threedee.view)
-
-(def THREE js/THREE)
+(ns threedee.view
+  (:require [cljsjs.three :as THREE]))
 
 (defn mouse-x->world-x [x canvas-width visible-width]
   (- (/ x (/ canvas-width visible-width))

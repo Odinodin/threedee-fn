@@ -6,7 +6,7 @@
 
 (enable-console-print!)
 
-(def canvas-element (.getElementById js/document "main"))
+(def canvas-element (.getElementById js/document "mainc"))
 (def WIDTH (.-width canvas-element))
 (def HEIGHT (.-height canvas-element))
 (def attractor-acceleration 0.005)
@@ -75,14 +75,14 @@
       (view/move-mesh! ball-mesh (:pos ball))
       (.add scene ball-mesh))))
 
-(def visible-height (let [vfov (/ (* camera.fov js/Math.PI) 180)]
-                      (* 2 (js/Math.tan (/ vfov 2)) (.-z camera.position))))
+(def visible-height (let [vfov (/ (* (.-fov camera) js/Math.PI) 180)]
+                      (* 2 (js/Math.tan (/ vfov 2)) (.-z (.-position camera)))))
 
 (def visible-width (* visible-height (/ WIDTH HEIGHT)))
 
 (defn on-mouse-down [e]
-  (let [x-mouse (- (.-clientX e) (.-offsetLeft renderer.domElement))
-        y-mouse (- HEIGHT (- (+ (.-clientY e) (.-scrollY js/window)) (.-offsetTop renderer.domElement)))]
+  (let [x-mouse (- (.-clientX e) (.-offsetLeft canvas-element))
+        y-mouse (- HEIGHT (- (+ (.-clientY e) (.-scrollY js/window)) (.-offsetTop canvas-element)))]
     (swap! model (fn [old] (-> old
                                (assoc-in [:attractor :pos 0] (view/mouse-x->world-x x-mouse WIDTH visible-width))
                                (assoc-in [:attractor :pos 1] (view/mouse-y->world-y y-mouse HEIGHT visible-height)))))))
@@ -107,7 +107,7 @@
 
 (defonce initial-setup
          (do
-           (.addEventListener js/document "mousedown" on-mouse-down false)
+           (.addEventListener canvas-element "mousedown" on-mouse-down false)
            (add-items-to-scene scene @model)
            (view/add-hemi-light! scene)
            (view/add-directional-light! scene [0.5 -1 0])
