@@ -88,7 +88,6 @@
                                (assoc-in [:attractor :pos 1] (view/mouse-y->world-y y-mouse HEIGHT visible-height)))))))
 
 (defn animate [model scene]
-  #_(prn "obj: " (.. (.getObjectByName scene 2) -position -x))
   (doseq [ball (conj (:balls model) (:attractor model))]
     (let [mesh (.getObjectByName scene (:id ball))]
       (view/move-mesh! mesh (:pos ball)))))
@@ -99,9 +98,6 @@
   (.render renderer scene camera))
 
 (defn mainloop []
-  ;; assign every call to js/requestAnimationFrame to global RAF var
-  ;; required to clean up render loop before each evaluation
-  #_(set! RAF (js/requestAnimationFrame render))
   (main)
   (js/requestAnimationFrame mainloop))
 

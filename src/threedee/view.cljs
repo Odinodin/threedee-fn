@@ -31,7 +31,7 @@
     (.add scene hemi-light)))
 
 (defn camera [width height [x y z]]
-  (let [c (THREE.PerspectiveCamera. 75 (/ width height) 0.2 1000)]
+  (let [c (THREE.PerspectiveCamera. 45 (/ width height) 1 1000)]
     (.set (.-position c) x y z)
     c))
 
